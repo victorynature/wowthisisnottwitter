@@ -21,7 +21,6 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 public class TimelineActivity extends Activity {
 
@@ -83,6 +82,10 @@ public class TimelineActivity extends Activity {
 				adapter.addAll(Tweet.fromJson(jsonTweets));
 				
 			}
+			
+			public void onFailure(Throwable e, JSONObject error) {
+			    Log.e("ERROR", e.toString());
+			}
 		});
 		
 	}
@@ -102,6 +105,9 @@ public class TimelineActivity extends Activity {
 				edit.commit();
 				setTitle("@"+username);
 			   			
+			}
+			public void onFailure(Throwable e, JSONObject error) {
+			    Log.e("ERROR", e.toString());
 			}
 		});
 	}
