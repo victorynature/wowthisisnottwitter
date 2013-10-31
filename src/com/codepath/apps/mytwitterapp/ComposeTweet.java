@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 public class ComposeTweet extends Activity {
 	EditText etPost;
 	Button btnTweet;
@@ -34,6 +35,7 @@ public class ComposeTweet extends Activity {
 		SharedPreferences pref =   
 			    PreferenceManager.getDefaultSharedPreferences(this);
 		String username = pref.getString("username", "blank");
+		
 		String userUrl=pref.getString("userImage", "blank");
 		
 		

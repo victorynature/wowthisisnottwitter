@@ -1,101 +1,71 @@
 package com.codepath.apps.mytwitterapp;
 
-import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.codepath.apps.mytwitterapp.fragments.HomeTimelineFragment;
+import com.codepath.apps.mytwitterapp.fragments.MentionsFragment;
+import com.codepath.apps.mytwitterapp.fragments.TweetsListFragment;
 import com.codepath.apps.mytwitterapp.models.Tweet;
 import com.codepath.apps.mytwitterapp.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import eu.erikw.PullToRefreshListView;
-import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
+
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class TimelineActivity extends Activity {
+
+public class TimelineActivity extends FragmentActivity implements TabListener{
 
 	String username;
-	PullToRefreshListView lvTweets;
-	TweetsAdapter adapter;
+	TweetsListFragment fragmentTweets;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
-		lvTweets = (PullToRefreshListView) findViewById(R.id.lvTweets);
-		
-		adapter = new TweetsAdapter(getBaseContext(), tweets);
-		lvTweets.setAdapter(adapter);
-		lvTweets.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list contents
-                // Make sure you call listView.onRefreshComplete()
-                // once the loading is done. This can be done from here or any
-                // place such as when the network request has completed successfully.
-                fetchTimelineAsync(0);
-            }
-        });
-		lvTweets.setOnScrollListener(new EndlessScrollListener() {
-			 @Override
-			 public void onLoadMore(int page, int totalItemsCount) {
-		            
-				 loadTimeline(page);
-				 
-			 }
-		});
-		adapter.clear();
-		loadTimeline(0);
+		setupNavigationTabs();
 		passCredentials();
-		
 	}
 	
-    public void fetchTimelineAsync(int page) {
-    	MyTwitterApp.getRestClient().getHomeTimeline(0, new JsonHttpResponseHandler() {
-            public void onSuccess(JSONArray json) {
-      
-            	lvTweets.onRefreshComplete();
-            }
+	private void setupNavigationTabs() {
+		ActionBar actionBar=getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		
+		actionBar.setDisplayShowTitleEnabled(true);
+		
+		Tab tabHome=actionBar.newTab().setText("Home").
+				setTag("HomeTimelineFragment").
+				setIcon(R.drawable.ic_home).setTabListener(this);
+		Tab tabMentions=actionBar.newTab().setText("Mentions").
+				setTag("MentionsTimelineFragment").
+				setIcon(R.drawable.ic_mention).setTabListener(this);
+		
+		actionBar.addTab(tabHome);
+		actionBar.addTab(tabMentions);
+		actionBar.selectTab(tabHome);
+		
+	}
 
-            public void onFailure(Throwable e) {
-                Log.d("DEBUG", "Fetch timeline error: " + e.toString());
-            }
-        });
-    }
-	
-	
-	private void loadTimeline(int page) {
-		MyTwitterApp.getRestClient().getHomeTimeline(page, new JsonHttpResponseHandler(){
-			@Override
-			public void onSuccess(JSONArray jsonTweets){
-				adapter.addAll(Tweet.fromJson(jsonTweets));
-				
-			}
-			
-			public void onFailure(Throwable e, JSONObject error) {
-			    Log.e("ERROR", e.toString());
-			}
-		});
-		
-	}
-	
 	private void passCredentials(){
 		MyTwitterApp.getRestClient().getCredentials(new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONObject jsonUser){
 				User user = User.fromJson(jsonUser);
-				String username = user.getScreenName();
+				username = user.getScreenName();
 				String userUrl=user.getProfileImageUrl();
 				SharedPreferences pref =  PreferenceManager.getDefaultSharedPreferences(TimelineActivity.this);
 				Editor edit = pref.edit();
@@ -129,8 +99,12 @@ public class TimelineActivity extends Activity {
     		Intent intent = new Intent(this, ComposeTweet.class);
     		intent.putExtra("username", "@"+username); 
     		startActivityForResult(intent, 1);
+    	} else if(id==R.id.action_profile){
+    		Intent intent = new Intent(this, ProfileActivity.class);
+    		intent.putExtra("username", username);
+    		startActivityForResult(intent, 1);
     	}
-    	
+       
     	return true;
     }
     
@@ -139,9 +113,42 @@ public class TimelineActivity extends Activity {
     	if(requestCode==1 && resultCode==RESULT_OK){
     		
     		Tweet twVal=(Tweet) data.getExtras().getSerializable("tweet");
-    		adapter.insert(twVal, 0);
+    		getActionBar().setSelectedNavigationItem(0);
+    		fragmentTweets.getAdapter().insert(twVal, 0);
     		       
     	}
-    } 
+    }
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		FragmentManager manager = getSupportFragmentManager();
+		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
+		
+		if(tab.getTag()=="HomeTimelineFragment"){
+			fragmentTweets = new HomeTimelineFragment();
+			fts.replace(R.id.frame_container, fragmentTweets);
+		}else{
+			fragmentTweets = new MentionsFragment();
+			fts.replace(R.id.frame_container, fragmentTweets);
+		}
+		fts.commit();
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	} 
+	
+	public void onProfileView(MenuItem mi){
+		Intent intent = new Intent(this, ProfileActivity.class);
+		startActivity(intent);
+	}
 
 }
