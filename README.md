@@ -22,7 +22,7 @@ pull-to-refresh
 
 ## User Stories:
 
-#### Includes all required user stories from androidtwitterappclient repository user stories
+### Includes all required user stories from androidtwitterappclient repository user stories
 #### User can switch between Timeline and Mention views using tabs.
 #### User can view their home timeline tweets.
 #### User can view the recent mentions of their username.
