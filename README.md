@@ -22,8 +22,8 @@ pull-to-refresh
 
 ## User Stories:
 
-### Includes all required user stories from androidtwitterappclient repository user stories
-#### User can switch between Timeline and Mention views using tabs.
+Includes all required user stories from androidtwitterappclient repository user stories.\n
+User can switch between Timeline and Mention views using tabs.\n
 #### User can view their home timeline tweets.
 #### User can view the recent mentions of their username.
 #### User can scroll to bottom of either of these lists and new tweets will load ("infinite scroll")
