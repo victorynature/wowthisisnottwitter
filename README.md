@@ -20,7 +20,7 @@ UniversalImageLoader
 pull-to-refresh 
 
 
-## User Stories:
+## User Stories
 
 * User can sign in using OAuth login flow
 * User can view last 25 tweets from their home timeline
