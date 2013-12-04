@@ -1,6 +1,13 @@
-Android Twitter Client App
-=======================
+# Wow it is not Twitter!
+
 Twitter client app, featuring OAuth authentication, timeline, and the major features of the standard Twitter app, including posting, viewing other users' timelines, and browsing timeline with infinite scroll.
+
+![My image1](/img/twitter_home.png)
+![My image2](/img/twitter_mentions.png)
+![My image3](/img/twitter_profile.png)
+![My image4](/img/twitter_user_timeline.png)
+![My image5](/img/titter_tweet.png)
+
 
 ## License
 
@@ -12,13 +19,28 @@ Apache Version 2.0
 This project uses the Twitter API and RestClientTemplate.
 
 It also uses many other open source libraries such as:
-CodePath Rest-Client-Template
-scribe-java
-Android Async HTTP
-codepath-oauth
-UniversalImageLoader
-pull-to-refresh 
+* CodePath Rest-Client-Template
+* scribe-java
+* Android Async HTTP
+* codepath-oauth
+* UniversalImageLoader
+* pull-to-refresh 
 
+## Building
+
+The build requires [Gradle](http://www.gradleware.com/)
+v1.6 and the [Android SDK](http://developer.android.com/sdk/index.html)
+to be installed in your development environment. In addition you'll need to set
+the `ANDROID_HOME` environment variable to the location of your SDK:
+
+    export ANDROID_HOME=/opt/tools/android-sdk
+
+After satisfying those requirements, the build is pretty simple:
+
+* Run `gradle assemble` from the root directory to build the APK only
+* Run `gradle build` from the root directory to build the app and also run
+  the integration tests, this requires a connected Android device or running
+  emulator.
 
 ## User Stories
 
