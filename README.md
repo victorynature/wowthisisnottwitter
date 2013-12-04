@@ -6,7 +6,7 @@ Twitter client app, featuring OAuth authentication, timeline, and the major feat
 ![My image2](/img/twitter_mentions.png)
 ![My image3](/img/twitter_profile.png)
 ![My image4](/img/twitter_user_timeline.png)
-![My image5](/img/titter_tweet.png)
+![My image5](/img/twitter_tweet.png)
 
 
 ## License
